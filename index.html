@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f5f6f8">
-<title>HomeMap</title>
+<meta name="theme-color" content="#f7f8fa">
+<title>HomeMap – Maps</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://tile.openstreetmap.org">
@@ -43,6 +43,57 @@
 .toast{position:absolute;z-index:900;top:calc(var(--safe-top) + 76px);left:50%;transform:translateX(-50%);max-width:90%;white-space:nowrap;display:none;background:rgba(29,39,52,.9);color:white;padding:9px 14px;border-radius:18px;font-size:12px;box-shadow:var(--shadow)}
 .leaflet-marker-icon{filter:drop-shadow(0 2px 2px #0004)}
 @media(min-width:720px){.top-search{left:18px;right:auto;width:520px}.map-controls{right:20px;top:80px}.bottom-dock{left:50%;right:auto;transform:translateX(-50%);width:410px;bottom:18px}.panel{left:auto;right:18px;bottom:18px;width:410px;max-height:calc(100% - 36px);border-radius:25px}.panel-backdrop{background:transparent}.search-results{left:18px;right:auto;width:460px;top:72px}}
+
+/* Major interface rebuild: floating Apple Maps-inspired home card */
+:root{--blue:#087df1;--ink:#202832;--secondary:#7b8490;--hair:rgba(28,40,54,.09);--panel:rgba(255,255,255,.965);--shadow:0 5px 24px rgba(23,38,55,.15)}
+html,body{background:#e8edf0}
+#map{background:#e8edf0}
+.leaflet-tile{filter:saturate(.94) contrast(1.015)}
+.top-search{top:calc(var(--safe-top) + 11px);left:14px;right:14px;gap:10px}
+.search-pill{height:52px;border-radius:28px;padding:0 17px;gap:11px;background:rgba(255,255,255,.97);border:1px solid rgba(255,255,255,.96);box-shadow:0 4px 20px rgba(24,38,54,.15)}
+.search-pill svg{width:20px;height:20px;stroke:#68727e}
+#searchInput{font-size:16px;font-weight:400;letter-spacing:-.25px}
+#searchInput::placeholder{color:#8a929b}
+.round-action{height:52px;width:52px;border-radius:50%;background:rgba(255,255,255,.98);border:1px solid rgba(255,255,255,.95);box-shadow:0 4px 20px rgba(24,38,54,.15);color:var(--blue)}
+.round-action svg{width:23px;height:23px}
+.map-controls{right:14px;top:calc(var(--safe-top) + 76px);gap:10px}
+.map-control{width:45px;height:45px;border-radius:50%;background:rgba(255,255,255,.97);border:1px solid rgba(255,255,255,.95);box-shadow:0 3px 16px rgba(24,38,54,.14);color:#354250}
+.map-control.layers{font-size:10px;letter-spacing:.1px}
+.map-control.active{background:#edf6ff;color:var(--blue)}
+.bottom-dock{left:10px;right:10px;bottom:calc(var(--safe-bottom) + 9px);gap:7px}
+.home-peek{pointer-events:auto;background:rgba(255,255,255,.97);border:1px solid rgba(255,255,255,.95);border-radius:25px;box-shadow:0 5px 25px rgba(20,34,50,.17);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);padding:8px 17px 12px}
+.home-grabber{width:36px;height:5px;border-radius:6px;background:#d5d9de;margin:1px auto 12px}
+.home-peek-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.home-peek-copy{min-width:0}
+.home-eyebrow{font-size:9px;font-weight:750;letter-spacing:1.1px;color:#89929c;margin-bottom:3px}
+.home-peek-title{font-size:21px;font-weight:700;letter-spacing:-.6px;line-height:1.12;color:#202832}
+.home-peek-subtitle{font-size:12px;color:#818b96;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:290px}
+.home-add{width:40px;height:40px;border:0;border-radius:50%;background:#087df1;color:#fff;font-size:25px;font-weight:300;line-height:1;box-shadow:0 3px 10px rgba(8,125,241,.23);flex:none}
+.home-quick-actions{display:flex;gap:8px;margin-top:12px}
+.quick-action{flex:1;height:38px;border:0;border-radius:12px;background:#f1f3f6;color:#394653;display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;font-weight:600}
+.quick-icon{font-size:16px;color:#087df1}
+.map-hint{font-size:10px;padding:6px 11px;border-radius:14px;box-shadow:none;background:rgba(34,44,57,.76)}
+.tabbar{height:58px;border-radius:22px;padding:3px;background:rgba(255,255,255,.97);border:1px solid rgba(255,255,255,.95);box-shadow:0 4px 20px rgba(20,34,50,.14)}
+.tab{height:48px;min-width:70px;font-size:10px;gap:2px}
+.tab svg{width:20px;height:20px}
+.panel{border-radius:27px 27px 0 0;padding:8px 20px calc(22px + var(--safe-bottom));background:rgba(250,251,253,.99);box-shadow:0 -9px 36px rgba(20,35,50,.2)}
+.grabber{width:37px;height:5px;background:#d2d6db;margin:2px auto 17px}
+.panel-title{font-size:24px;letter-spacing:-.7px}
+.panel-subtitle{font-size:13px;color:#7e8994}
+.dismiss{background:#eef1f4;color:#68727e}
+.form-label{font-size:10px;letter-spacing:.8px;color:#8a949e;margin-top:17px}
+.form-input,.form-select,.form-textarea{border-radius:14px;border-color:#e5e9ed;padding:13px 14px;font-size:15px}
+.primary-btn{border-radius:15px;min-height:47px;font-size:15px}
+.soft-btn,.red-btn{border-radius:15px;min-height:47px}
+.search-results{top:calc(var(--safe-top) + 70px);left:14px;right:76px;border-radius:18px}
+.toast{border-radius:20px;box-shadow:0 4px 16px rgba(0,0,0,.18)}
+@media(min-width:720px){
+ .top-search{left:20px;width:520px}
+ .bottom-dock{left:50%;right:auto;transform:translateX(-50%);width:430px;bottom:18px}
+ .home-peek{border-radius:25px}
+ .panel{left:auto;right:18px;bottom:18px;border-radius:25px;width:410px;max-height:calc(100% - 36px)}
+}
+
 </style>
 </head>
 <body>
@@ -69,6 +120,21 @@
 </div>
 
 <div class="bottom-dock">
+  <section class="home-peek" id="homePeek">
+    <div class="home-grabber"></div>
+    <div class="home-peek-row">
+      <div class="home-peek-copy">
+        <div class="home-eyebrow">HOMEmAP</div>
+        <div class="home-peek-title">Your places</div>
+        <div class="home-peek-subtitle" id="homePeekCount">Save houses and keep property notes in one place</div>
+      </div>
+      <button class="home-add" id="homeAddButton" aria-label="Add a property">＋</button>
+    </div>
+    <div class="home-quick-actions">
+      <button class="quick-action" id="quickPlaces"><span class="quick-icon">⌖</span><span>Saved places</span></button>
+      <button class="quick-action" id="quickBackup"><span class="quick-icon">⇧</span><span>Back up</span></button>
+    </div>
+  </section>
   <div class="map-hint" id="mapHint">Tap +, then tap a house to save a pin</div>
   <nav class="tabbar" aria-label="Main navigation">
     <button class="tab active" id="mapTab"><svg viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15m6-12v15"/></svg>Map</button>
@@ -248,7 +314,7 @@ function switchStyle(){
   if(mapStyle==='satellite'){map.removeLayer(streetLayer);satelliteLayer.addTo(map);$('layerButton').textContent='SAT';$('layerButton').classList.add('active');}
   else{map.removeLayer(satelliteLayer);streetLayer.addTo(map);$('layerButton').textContent='MAP';$('layerButton').classList.remove('active');}
 }
-const streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'});
+const streetLayer=L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:20,attribution:'© OpenStreetMap contributors © CARTO'});
 const satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri'});
 function initMap(){
   if(!window.L){$('mapHint').textContent='Map library did not load. Check your internet connection and refresh.';return;}
@@ -267,6 +333,9 @@ function locate(){
   },()=>{$('locateButton').classList.remove('active');toast('Could not get your location. Check location permissions.');},{enableHighAccuracy:true,timeout:12000});
 }
 $('addButton').addEventListener('click',setAddMode);
+$('homeAddButton').addEventListener('click',setAddMode);
+$('quickPlaces').addEventListener('click',()=>{setTab('placesTab');openPanel('places');});
+$('quickBackup').addEventListener('click',()=>{setTab('backupTab');openPanel('backup');});
 $('layerButton').addEventListener('click',switchStyle);
 $('locateButton').addEventListener('click',locate);
 $('zoomInButton').addEventListener('click',()=>map&&map.zoomIn());
