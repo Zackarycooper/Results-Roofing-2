@@ -1,1 +1,2 @@
 # Results-Roofing-2
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#173449"/><path d="M32 7 8 28h6v27h15V39h8v16h13V28h6L32 7Z" fill="#fff"/><circle cx="32" cy="27" r="5" fill="#2677bd"/></svg>
