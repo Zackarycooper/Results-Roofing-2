@@ -1,60 +1,306 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#f7f8fa"><title>HomeMap</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><style>
-:root{--ink:#17202b;--muted:#687381;--blue:#087cf0;--glass:rgba(255,255,255,.94);--shadow:0 8px 28px rgba(18,32,48,.16)}*{box-sizing:border-box}html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:#e9edf1}#map{position:absolute;inset:0;z-index:1}.leaflet-container{font:inherit}.topbar{position:absolute;z-index:500;top:max(12px,env(safe-area-inset-top));left:14px;right:14px;display:flex;gap:9px;align-items:center}.search-wrap{flex:1;display:flex;align-items:center;gap:9px;background:var(--glass);backdrop-filter:blur(18px);border-radius:16px;padding:0 13px;height:48px;box-shadow:var(--shadow)}.search-wrap span{font-size:20px;color:#5b6570}#search{border:0;outline:0;background:transparent;width:100%;font-size:16px;min-width:0}.circle-btn,.tool-btn{border:0;background:var(--glass);backdrop-filter:blur(18px);box-shadow:var(--shadow);display:grid;place-items:center;cursor:pointer;color:#263545}.circle-btn{width:46px;height:46px;border-radius:15px;font-size:25px}.map-tools{position:absolute;z-index:450;right:14px;top:calc(max(12px,env(safe-area-inset-top)) + 62px);display:flex;flex-direction:column;gap:9px}.tool-btn{width:44px;height:44px;border-radius:14px;font-size:20px}.tool-btn.active{color:var(--blue)}.bottom-area{position:absolute;z-index:500;bottom:max(12px,env(safe-area-inset-bottom));left:12px;right:12px;pointer-events:none;display:flex;flex-direction:column;gap:10px}.hint{align-self:center;background:#1c2733d9;color:white;border-radius:20px;padding:8px 13px;font-size:12px;pointer-events:auto}.bottom-nav{pointer-events:auto;background:var(--glass);backdrop-filter:blur(22px);border-radius:19px;box-shadow:var(--shadow);display:flex;justify-content:space-around;padding:8px 4px}.nav-btn{border:0;background:transparent;color:#66717e;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;min-width:58px;padding:3px 8px}.nav-btn b{font-size:21px;font-weight:400}.nav-btn.selected{color:var(--blue);font-weight:650}.sheet-backdrop{position:absolute;inset:0;z-index:600;background:#0a141e2e;display:none}.sheet-backdrop.show{display:block}.sheet{position:absolute;z-index:610;left:0;right:0;bottom:0;max-height:84%;background:#fafbfdF7;backdrop-filter:blur(25px);border-radius:24px 24px 0 0;box-shadow:0 -12px 40px #101e2d33;transform:translateY(105%);transition:transform .28s;overflow:auto;padding:9px 18px calc(20px + env(safe-area-inset-bottom))}.sheet.open{transform:translateY(0)}.grabber{height:5px;width:38px;border-radius:5px;background:#c8cdd3;margin:2px auto 15px}.sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.sheet h2{font-size:22px;margin:0 0 4px}.subtle{font-size:13px;color:var(--muted)}.close{border:0;background:#e9edf1;border-radius:50%;width:31px;height:31px;font-size:20px}.field{margin-top:14px}.field label{display:block;font-size:12px;color:#65717e;font-weight:650;margin:0 0 6px}.field input,.field textarea,.field select{width:100%;border:1px solid #1926341f;border-radius:12px;padding:12px 13px;font:inherit;font-size:15px;background:white}.field textarea{min-height:100px;resize:vertical}.row{display:flex;gap:10px}.row>.field{flex:1;min-width:0}.actions{display:flex;gap:9px;margin-top:17px}.primary,.secondary,.danger{border:0;border-radius:13px;padding:12px 15px;font-size:14px;font-weight:650}.primary{background:var(--blue);color:white;flex:1}.secondary{background:#e9eef4;color:#263545}.pin-dot{width:25px;height:25px;border:3px solid white;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 2px 8px #0005;position:relative}.pin-dot:after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:white;top:6px;left:6px}.search-results{position:absolute;z-index:520;top:calc(max(12px,env(safe-area-inset-top)) + 56px);left:14px;right:68px;background:white;border-radius:14px;box-shadow:var(--shadow);overflow:hidden;display:none}.result{padding:12px 14px;border-bottom:1px solid #edf0f2;font-size:14px;cursor:pointer}.result small{display:block;color:var(--muted);margin-top:3px}.empty{padding:16px;color:var(--muted);font-size:14px}.toast{position:absolute;z-index:900;top:80px;left:50%;transform:translateX(-50%);background:#17202b;color:white;padding:9px 14px;border-radius:20px;font-size:13px;display:none;white-space:nowrap}
-@media(min-width:700px){.topbar{max-width:570px}.bottom-area{left:50%;right:auto;transform:translateX(-50%);width:430px}.sheet{left:auto;right:18px;bottom:18px;width:390px;border-radius:24px;max-height:calc(100% - 36px)}.sheet-backdrop{background:transparent}}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f6f8">
+<title>HomeMap</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://tile.openstreetmap.org">
+<link rel="preconnect" href="https://server.arcgisonline.com">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{color-scheme:light;--blue:#087df1;--ink:#1c2430;--secondary:#737d89;--hair:rgba(35,48,64,.11);--panel:rgba(255,255,255,.96);--shadow:0 3px 18px rgba(24,37,52,.16);--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{height:100%;width:100%;margin:0;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Arial,sans-serif;color:var(--ink);background:#e9edf1;-webkit-font-smoothing:antialiased}button,input,textarea,select{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}#map{position:absolute;inset:0;z-index:1;background:#e8edf0}.leaflet-container{font:inherit}.leaflet-control-attribution{font-size:9px!important;background:rgba(255,255,255,.72)!important}
+.top-search{position:absolute;z-index:500;top:calc(var(--safe-top) + 10px);left:12px;right:12px;display:flex;gap:9px;align-items:center}
+.search-pill{height:50px;flex:1;display:flex;align-items:center;gap:10px;padding:0 15px;border-radius:25px;background:var(--panel);border:1px solid rgba(255,255,255,.85);box-shadow:var(--shadow);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+.search-pill svg{width:19px;height:19px;stroke:#66717e;fill:none;stroke-width:2;flex:none}
+#searchInput{width:100%;min-width:0;border:0;outline:0;background:transparent;color:var(--ink);font-size:16px;letter-spacing:-.2px}#searchInput::placeholder{color:#858e98}
+.round-action{height:50px;width:50px;border:1px solid rgba(255,255,255,.85);border-radius:50%;background:var(--panel);box-shadow:var(--shadow);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);display:grid;place-items:center;color:var(--blue)}
+.round-action svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2}
+.map-controls{position:absolute;z-index:450;right:13px;top:calc(var(--safe-top) + 72px);display:flex;flex-direction:column;gap:9px}
+.map-control{width:43px;height:43px;border:1px solid rgba(255,255,255,.8);border-radius:50%;background:var(--panel);box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);display:grid;place-items:center;color:#394653}
+.map-control svg{height:20px;width:20px;stroke:currentColor;fill:none;stroke-width:1.8}.map-control.active{color:var(--blue);background:#edf6ff}
+.map-control.layers{font-size:11px;font-weight:700;letter-spacing:-.3px}
+.search-results{position:absolute;z-index:560;top:calc(var(--safe-top) + 67px);left:12px;right:70px;max-height:44vh;overflow:auto;display:none;background:rgba(255,255,255,.98);border-radius:17px;box-shadow:var(--shadow);backdrop-filter:blur(20px)}
+.search-result{width:100%;border:0;border-bottom:1px solid #edf0f3;background:transparent;text-align:left;padding:12px 15px;color:var(--ink);font-size:14px}.search-result:last-child{border-bottom:0}.search-result small{display:block;margin-top:3px;color:var(--secondary);font-size:11px}.search-result:active{background:#f1f6fc}
+.bottom-dock{position:absolute;z-index:500;left:12px;right:12px;bottom:calc(var(--safe-bottom) + 10px);display:flex;flex-direction:column;align-items:stretch;gap:8px;pointer-events:none}
+.map-hint{align-self:center;max-width:90%;border-radius:18px;padding:7px 12px;background:rgba(34,44,57,.82);color:white;font-size:11px;line-height:1.2;box-shadow:0 2px 8px #0002;pointer-events:auto;text-align:center}
+.tabbar{height:64px;border-radius:23px;background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.9);box-shadow:0 4px 24px rgba(20,34,50,.16);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:space-around;pointer-events:auto;padding:4px}
+.tab{height:52px;min-width:74px;flex:1;border:0;background:transparent;color:#77818d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;font-weight:500;border-radius:15px}.tab svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8}.tab.active{color:var(--blue);font-weight:650}
+.panel-backdrop{position:absolute;z-index:600;inset:0;background:rgba(17,27,39,.14);opacity:0;pointer-events:none;transition:opacity .22s}.panel-backdrop.show{opacity:1;pointer-events:auto}
+.panel{position:absolute;z-index:610;left:0;right:0;bottom:0;max-height:min(82%,760px);padding:8px 18px calc(20px + var(--safe-bottom));background:rgba(250,251,253,.985);border-radius:25px 25px 0 0;box-shadow:0 -8px 35px rgba(20,35,50,.18);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1);overflow:auto;overscroll-behavior:contain}
+.panel.open{transform:translateY(0)}.grabber{width:36px;height:5px;border-radius:9px;background:#d2d6db;margin:2px auto 16px}
+.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}.panel-title{font-size:23px;line-height:1.15;letter-spacing:-.6px;font-weight:700;margin:0}.panel-subtitle{font-size:13px;color:var(--secondary);margin-top:4px;line-height:1.35}.dismiss{width:30px;height:30px;border:0;border-radius:50%;background:#edf0f3;color:#68727d;font-size:21px;line-height:1;flex:none}
+.form-label{display:block;color:#818b96;font-size:10px;letter-spacing:.75px;font-weight:700;margin:15px 0 7px}.form-input,.form-select,.form-textarea{width:100%;border:1px solid #e4e8ed;border-radius:13px;background:#fff;padding:12px 13px;color:var(--ink);font-size:15px;outline:none;box-shadow:0 1px 2px rgba(20,30,40,.025)}.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:#9bcaff;box-shadow:0 0 0 3px rgba(8,125,241,.1)}.form-textarea{min-height:112px;resize:vertical;line-height:1.4}.form-row{display:flex;gap:10px}.form-row>div{flex:1;min-width:0}
+.button-row{display:flex;gap:9px;margin-top:17px}.primary-btn,.soft-btn,.red-btn{min-height:45px;border:0;border-radius:14px;padding:11px 15px;font-size:14px;font-weight:650}.primary-btn{flex:1;background:var(--blue);color:white;box-shadow:0 3px 9px rgba(8,125,241,.18)}.soft-btn{background:#edf0f4;color:#34404d}.red-btn{background:#fff0ef;color:#c43d35}
+.detail-card{background:white;border:1px solid #edf0f3;border-radius:17px;padding:14px;margin-top:13px}.detail-category{font-size:12px;color:var(--secondary);display:flex;align-items:center;gap:7px}.category-dot{width:9px;height:9px;border-radius:50%;display:inline-block}.detail-notes{font-size:14px;line-height:1.45;white-space:pre-wrap;margin-top:10px;color:#303b47}.detail-coords{font-size:11px;color:#89929c;margin-top:9px}
+.list-search{display:flex;align-items:center;gap:8px;background:#eef1f4;border-radius:12px;padding:0 11px;height:42px;margin:12px 0}.list-search svg{width:17px;height:17px;stroke:#7b8490;fill:none;stroke-width:2}.list-search input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:14px}
+.place-list{display:flex;flex-direction:column;gap:1px}.place-item{display:flex;align-items:center;gap:12px;width:100%;padding:12px 2px;border:0;border-bottom:1px solid #edf0f3;background:transparent;text-align:left;color:var(--ink)}.place-pin{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:white;flex:none;font-size:16px}.place-copy{flex:1;min-width:0}.place-name{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.place-meta{font-size:11px;color:var(--secondary);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.place-arrow{color:#a0a8b0;font-size:20px}
+.empty-state{text-align:center;color:#858e98;padding:25px 10px;font-size:13px;line-height:1.45}
+.backup-option{display:flex;align-items:center;gap:12px;padding:14px 2px;border-bottom:1px solid #edf0f3}.backup-icon{width:38px;height:38px;border-radius:12px;background:#edf5ff;color:var(--blue);display:grid;place-items:center;font-size:19px}.backup-copy{flex:1}.backup-copy strong{display:block;font-size:14px}.backup-copy small{display:block;color:var(--secondary);font-size:11px;margin-top:3px}.backup-option button{border:0;border-radius:12px;background:#edf0f4;padding:9px 12px;color:#34404d;font-size:12px;font-weight:650}
+.toast{position:absolute;z-index:900;top:calc(var(--safe-top) + 76px);left:50%;transform:translateX(-50%);max-width:90%;white-space:nowrap;display:none;background:rgba(29,39,52,.9);color:white;padding:9px 14px;border-radius:18px;font-size:12px;box-shadow:var(--shadow)}
+.leaflet-marker-icon{filter:drop-shadow(0 2px 2px #0004)}
+@media(min-width:720px){.top-search{left:18px;right:auto;width:520px}.map-controls{right:20px;top:80px}.bottom-dock{left:50%;right:auto;transform:translateX(-50%);width:410px;bottom:18px}.panel{left:auto;right:18px;bottom:18px;width:410px;max-height:calc(100% - 36px);border-radius:25px}.panel-backdrop{background:transparent}.search-results{left:18px;right:auto;width:460px;top:72px}}
+</style>
+</head>
+<body>
+<div id="map" aria-label="Interactive property map"></div>
 
-/* Clean Apple Maps-inspired visual refresh */
-:root{--ink:#202832;--muted:#7b8490;--blue:#087cf0;--glass:rgba(255,255,255,.94);--shadow:0 3px 16px rgba(25,38,52,.13)}
-html,body{background:#eef1f4;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:-.15px}
-#map{background:#e8edf0}
-.topbar{top:max(12px,env(safe-area-inset-top));left:12px;right:12px;gap:8px}
-.search-wrap{height:50px;border-radius:26px;padding:0 16px;gap:10px;background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.9);box-shadow:0 3px 18px rgba(25,38,52,.14)}
-.search-wrap span{font-size:22px;color:#7b8490}
-#search{font-size:16px;font-weight:400;letter-spacing:-.2px}
-#search::placeholder{color:#8b939c}
-.circle-btn{height:50px;width:50px;border-radius:50%;background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.9);box-shadow:0 3px 18px rgba(25,38,52,.14);font-size:25px;font-weight:300;color:var(--blue)}
-.map-tools{right:13px;top:calc(max(12px,env(safe-area-inset-top)) + 65px);gap:10px}
-.tool-btn{width:43px;height:43px;border-radius:50%;background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.85);box-shadow:0 3px 14px rgba(25,38,52,.13);font-size:19px;color:#46515d}
-.tool-btn.active{background:#eaf3ff;color:var(--blue)}
-.bottom-area{bottom:max(13px,env(safe-area-inset-bottom));left:12px;right:12px;gap:8px}
-.hint{background:rgba(35,45,57,.82);border-radius:18px;padding:7px 12px;font-size:11px;font-weight:500;box-shadow:0 2px 8px #0002}
-.bottom-nav{border-radius:24px;padding:7px 6px;background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.9);box-shadow:0 4px 22px rgba(25,38,52,.16);justify-content:space-around}
-.nav-btn{color:#77818c;font-size:10px;font-weight:500;gap:2px;min-width:65px;padding:4px 12px}
-.nav-btn b{font-size:21px;line-height:22px}
-.nav-btn.selected{color:var(--blue);font-weight:650}
-.sheet{background:rgba(250,251,253,.985);border-radius:27px 27px 0 0;padding:8px 20px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -8px 35px rgba(20,35,50,.17)}
-.grabber{width:36px;height:5px;background:#d2d6db;margin:3px auto 18px}
-.sheet h2{font-size:23px;font-weight:700;letter-spacing:-.65px}
-.subtle{font-size:13px;color:#7b8490;line-height:1.35}
-.close{background:#eef0f3;color:#6f7882;font-size:20px;width:30px;height:30px}
-.field{margin-top:16px}
-.field label{font-size:10px;letter-spacing:.7px;color:#8a929b;font-weight:700;margin-bottom:7px}
-.field input,.field textarea,.field select{border:1px solid #e4e7eb;border-radius:13px;padding:13px 14px;font-size:15px;background:#fff;box-shadow:0 1px 2px rgba(20,30,40,.025)}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:#8fc3ff;outline:3px solid rgba(8,124,240,.09)}
-.field textarea{min-height:110px;line-height:1.4}
-.primary{border-radius:14px;background:#087cf0;padding:14px 16px;font-size:15px;box-shadow:0 3px 8px rgba(8,124,240,.18)}
-.secondary{border-radius:14px;background:#edf0f3;color:#394552;padding:14px 16px}
-.pin-dot{width:24px;height:24px;border-width:3px;box-shadow:0 2px 7px rgba(0,0,0,.3)}
-.search-results{top:calc(max(12px,env(safe-area-inset-top)) + 60px);left:12px;right:70px;border-radius:17px;box-shadow:0 6px 24px rgba(25,38,52,.16)}
-.result{padding:13px 15px;font-size:14px}
-.result small{font-size:11px;color:#89929b}
-.toast{top:82px;border-radius:20px;padding:9px 15px;box-shadow:0 4px 16px rgba(0,0,0,.18)}
-@media(min-width:700px){.topbar{left:18px}.bottom-area{width:400px}.sheet{border-radius:27px}}
+<div class="top-search">
+  <label class="search-pill" aria-label="Search places">
+    <svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+    <input id="searchInput" type="search" autocomplete="off" placeholder="Search Maps">
+  </label>
+  <button class="round-action" id="addButton" aria-label="Add a property pin" title="Add a property">
+    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+  </button>
+</div>
+<div class="search-results" id="searchResults"></div>
 
-</style></head><body><div id="map"></div><div class="topbar"><div class="search-wrap"><span>⌕</span><input id="search" autocomplete="off" placeholder="Search Maps"></div><button class="circle-btn" id="addBtn" title="Add a pin">＋</button></div><div class="search-results" id="searchResults"></div><div class="map-tools"><button class="tool-btn" id="layerBtn" title="Map style">◫</button><button class="tool-btn" id="locateBtn" title="My location">◎</button><button class="tool-btn" id="zoomIn">＋</button><button class="tool-btn" id="zoomOut">−</button></div><div class="bottom-area"><div class="hint" id="hint">Tap +, then tap a house to save it</div><div class="bottom-nav"><button class="nav-btn selected" id="mapTab"><b>⌖</b>Map</button><button class="nav-btn" id="savedTab"><b>⌖</b>Places</button><button class="nav-btn" id="backupTab"><b>⇧</b>Backup</button></div></div><div class="sheet-backdrop" id="backdrop"></div><section class="sheet" id="sheet"><div class="grabber"></div><div class="sheet-head"><div><h2 id="sheetTitle">New property</h2><div class="subtle" id="sheetAddress">Tap the map to place a pin</div></div><button class="close" id="closeSheet">×</button></div><div class="field"><label>PROPERTY NAME</label><input id="propertyName" placeholder="House, customer, or street name"></div><div class="row"><div class="field"><label>CATEGORY</label><select id="category"><option>Prospect</option><option>Contacted</option><option>Estimate</option><option>Customer</option><option>Follow-up</option><option>Other</option></select></div><div class="field"><label>PIN COLOR</label><select id="pinColor"><option value="#087cf0">Blue</option><option value="#27a66b">Green</option><option value="#f2a900">Yellow</option><option value="#e34b43">Red</option><option value="#9256cf">Purple</option><option value="#344454">Gray</option></select></div></div><div class="field"><label>PROPERTY NOTES</label><textarea id="notes" placeholder="Roof condition, contact details, work needed, follow-up date, or anything to remember..."></textarea></div><div class="actions"><button class="primary" id="savePin">Save property</button><button class="secondary" id="deletePin" style="display:none">Delete</button></div></section><div class="toast" id="toast"></div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
-(()=>{const $=id=>document.getElementById(id);const map=L.map('map',{zoomControl:false}).setView([33.0362,-97.3881],14);const street=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}),sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri'});street.addTo(map);let satellite=false,pins=JSON.parse(localStorage.getItem('homemap_pins_v3')||'[]'),markers={},editing=null,draft=null,addMode=false;
-const icon=c=>L.divIcon({className:'',html:`<div class="pin-dot" style="background:${c}"></div>`,iconSize:[28,34],iconAnchor:[14,30]});const save=()=>localStorage.setItem('homemap_pins_v3',JSON.stringify(pins));const toast=t=>{$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2200)};
-function render(){Object.values(markers).forEach(m=>map.removeLayer(m));markers={};pins.forEach(p=>{let m=L.marker([p.lat,p.lng],{icon:icon(p.color||'#087cf0')}).addTo(map);m.on('click',()=>edit(p.id));markers[p.id]=m})}
-function show(){$('backdrop').classList.add('show');$('sheet').classList.add('open')}function hide(){$('backdrop').classList.remove('show');$('sheet').classList.remove('open');editing=null}
-function edit(id){let p=pins.find(x=>x.id===id);if(!p)return;editing=id;draft={lat:p.lat,lng:p.lng};$('sheetTitle').textContent='Property details';$('sheetAddress').textContent=p.address||`${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}`;$('propertyName').value=p.name||'';$('category').value=p.category||'Prospect';$('pinColor').value=p.color||'#087cf0';$('notes').value=p.notes||'';$('savePin').textContent='Save changes';$('deletePin').style.display='block';show()}
-function fresh(ll,address=''){editing=null;draft=ll;$('sheetTitle').textContent='New property';$('sheetAddress').textContent=address||`${ll.lat.toFixed(5)}, ${ll.lng.toFixed(5)}`;$('propertyName').value='';$('category').value='Prospect';$('pinColor').value='#087cf0';$('notes').value='';$('savePin').textContent='Save property';$('deletePin').style.display='none';show()}
-map.on('click',e=>{if(addMode){fresh(e.latlng);addMode=false;$('hint').textContent='Tap +, then tap a house to save it'}else $('hint').textContent='Tap + to add a pin, or tap a saved pin to edit'});$('addBtn').onclick=()=>{addMode=true;$('hint').textContent='Tap the map where the house is located';toast('Tap the map to place your pin')};
-$('savePin').onclick=()=>{if(!draft)return;let p={id:editing||'p'+Date.now(),lat:draft.lat,lng:draft.lng,name:$('propertyName').value.trim()||'Saved property',category:$('category').value,color:$('pinColor').value,notes:$('notes').value.trim(),address:$('sheetAddress').textContent};if(editing){let i=pins.findIndex(x=>x.id===editing);if(i>=0)pins[i]=p}else pins.push(p);save();render();hide();toast('Property saved on this device')};
-$('deletePin').onclick=()=>{if(!editing||!confirm('Delete this property and its notes?'))return;pins=pins.filter(p=>p.id!==editing);save();render();hide();toast('Property deleted')};$('closeSheet').onclick=hide;$('backdrop').onclick=hide;
-$('layerBtn').onclick=()=>{if(satellite){map.removeLayer(sat);street.addTo(map);$('layerBtn').classList.remove('active')}else{map.removeLayer(street);sat.addTo(map);$('layerBtn').classList.add('active')}satellite=!satellite};$('zoomIn').onclick=()=>map.zoomIn();$('zoomOut').onclick=()=>map.zoomOut();$('locateBtn').onclick=()=>{if(!navigator.geolocation)return toast('Location unavailable');navigator.geolocation.getCurrentPosition(p=>map.setView([p.coords.latitude,p.coords.longitude],17),()=>toast('Could not get your location'))};
-async function search(q){let box=$('searchResults');box.innerHTML='<div class="empty">Searching…</div>';box.style.display='block';try{let r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q='+encodeURIComponent(q)),d=await r.json();box.innerHTML='';if(!d.length){box.innerHTML='<div class="empty">No results found</div>';return}d.forEach(x=>{let el=document.createElement('div');el.className='result';el.textContent=x.name||x.display_name;let sm=document.createElement('small');sm.textContent=x.display_name;el.appendChild(sm);el.onclick=()=>{let ll={lat:+x.lat,lng:+x.lon};map.setView([ll.lat,ll.lng],18);box.style.display='none';$('search').value=x.name||x.display_name;fresh(ll,x.display_name)};box.appendChild(el)})}catch(e){box.innerHTML='<div class="empty">Search needs an internet connection.</div>'}}
-let timer;$('search').oninput=()=>{clearTimeout(timer);let q=$('search').value.trim();if(q.length<3){$('searchResults').style.display='none';return}timer=setTimeout(()=>search(q),500)};document.addEventListener('click',e=>{if(!e.target.closest('.topbar')&&!e.target.closest('.search-results'))$('searchResults').style.display='none'});
-$('savedTab').onclick=()=>{if(!pins.length)return toast('No saved properties yet');let v=prompt('Saved properties:\n'+pins.map((p,i)=>`${i+1}. ${p.name} — ${p.category}`).join('\n')+'\n\nEnter a number to open one:');let n=Number(v)-1;if(Number.isInteger(n)&&pins[n]){map.setView([pins[n].lat,pins[n].lng],18);edit(pins[n].id)}};$('mapTab').onclick=()=>{};$('backupTab').onclick=()=>{let v=prompt('Backup options:\n1 = Export backup\n2 = Import backup');if(v==='1'){let b=new Blob([JSON.stringify({app:'HomeMap',version:3,pins},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='homemap-backup.json';a.click();URL.revokeObjectURL(a.href)}if(v==='2')$('importFile').click()};
-let input=document.createElement('input');input.type='file';input.accept='application/json';input.style.display='none';input.id='importFile';document.body.appendChild(input);input.onchange=async()=>{try{let d=JSON.parse(await input.files[0].text());if(!Array.isArray(d.pins))throw 0;if(!confirm(`Import ${d.pins.length} properties? This replaces properties saved on this device.`))return;pins=d.pins;save();render();toast('Backup imported')}catch(e){alert('Could not read that backup file.')}input.value=''};render();if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+<div class="map-controls">
+  <button class="map-control layers" id="layerButton" aria-label="Switch map style" title="Map style">MAP</button>
+  <button class="map-control" id="locateButton" aria-label="Show my location" title="My location">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
+  </button>
+  <button class="map-control" id="zoomInButton" aria-label="Zoom in"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+  <button class="map-control" id="zoomOutButton" aria-label="Zoom out"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+</div>
+
+<div class="bottom-dock">
+  <div class="map-hint" id="mapHint">Tap +, then tap a house to save a pin</div>
+  <nav class="tabbar" aria-label="Main navigation">
+    <button class="tab active" id="mapTab"><svg viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3zM9 3v15m6-12v15"/></svg>Map</button>
+    <button class="tab" id="placesTab"><svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>Places</button>
+    <button class="tab" id="backupTab"><svg viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 19v2h16v-2"/></svg>Backup</button>
+  </nav>
+</div>
+
+<div class="panel-backdrop" id="panelBackdrop"></div>
+<section class="panel" id="panel" aria-live="polite">
+  <div class="grabber"></div>
+  <div id="panelContent"></div>
+</section>
+<div class="toast" id="toast"></div>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const STORAGE_KEY = 'homemap_pins_v3';
+const LEGACY_KEYS = ['homemap_pins_v2','homemap_pins'];
+const COLORS = {Blue:'#087df1',Green:'#27a66b',Yellow:'#e7a900',Red:'#e34b43',Purple:'#9256cf',Gray:'#65717e'};
+const CATEGORIES = ['Prospect','Contacted','Estimate','Customer','Follow-up','Other'];
+let pins = loadPins(), markers = new Map(), activePinId = null, draftLatLng = null;
+let addMode = false, mapStyle = 'standard', panelMode = null, userMarker = null, searchTimer = null;
+let map;
+
+function loadPins(){
+  try {
+    let raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) for(const key of LEGACY_KEYS){ raw=localStorage.getItem(key); if(raw) break; }
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed.filter(p => Number.isFinite(Number(p.lat)) && Number.isFinite(Number(p.lng))).map(p => ({
+      id: String(p.id || ('p'+Math.random().toString(36).slice(2))),
+      lat:Number(p.lat), lng:Number(p.lng), name:p.name || 'Saved property',
+      category:CATEGORIES.includes(p.category)?p.category:'Prospect',
+      color:p.color || COLORS.Blue, notes:p.notes || '', address:p.address || ''
+    })) : [];
+  } catch { return []; }
+}
+function persist(){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(pins)); } catch { toast('Could not save. Device storage may be full.'); } }
+function toast(message){ const el=$('toast');el.textContent=message;el.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.style.display='none',2400); }
+function escapeHTML(value){return String(value ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function iconFor(color){
+  return L.divIcon({className:'',html:`<div style="width:27px;height:27px;border:3px solid white;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${color};box-shadow:0 2px 7px #0005;position:relative"><i style="position:absolute;width:7px;height:7px;border-radius:50%;background:#fff;top:7px;left:7px"></i></div>`,iconSize:[31,36],iconAnchor:[15,32]});
+}
+function renderMarkers(){
+  for(const marker of markers.values()) map.removeLayer(marker);
+  markers.clear();
+  pins.forEach(pin=>{
+    const marker=L.marker([pin.lat,pin.lng],{icon:iconFor(pin.color)}).addTo(map);
+    marker.on('click',()=>showDetails(pin.id));
+    markers.set(pin.id,marker);
+  });
+}
+function setTab(which){
+  ['mapTab','placesTab','backupTab'].forEach(id=>$(id).classList.toggle('active',id===which));
+}
+function openPanel(mode){
+  panelMode=mode;
+  $('panelBackdrop').classList.add('show');
+  $('panel').classList.add('open');
+  renderPanel();
+}
+function closePanel(){
+  $('panelBackdrop').classList.remove('show');
+  $('panel').classList.remove('open');
+  panelMode=null;activePinId=null;draftLatLng=null;
+}
+function panelHeader(title,subtitle=''){
+  return `<div class="panel-head"><div><h2 class="panel-title">${escapeHTML(title)}</h2>${subtitle?`<div class="panel-subtitle">${escapeHTML(subtitle)}</div>`:''}</div><button class="dismiss" data-action="close" aria-label="Close">×</button></div>`;
+}
+function renderPanel(){
+  const root=$('panelContent');
+  if(panelMode==='editor'){
+    const existing=pins.find(p=>p.id===activePinId);
+    const p=existing || {name:'',category:'Prospect',color:COLORS.Blue,notes:'',address:'',lat:draftLatLng.lat,lng:draftLatLng.lng};
+    root.innerHTML=`${panelHeader(existing?'Property details':'New property',p.address || `${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}`)}
+      <label class="form-label" for="propertyName">PROPERTY NAME</label><input class="form-input" id="propertyName" maxlength="100" placeholder="House, customer, or street name" value="${escapeHTML(p.name)}">
+      <div class="form-row"><div><label class="form-label" for="propertyCategory">CATEGORY</label><select class="form-select" id="propertyCategory">${CATEGORIES.map(c=>`<option ${p.category===c?'selected':''}>${c}</option>`).join('')}</select></div>
+      <div><label class="form-label" for="propertyColor">PIN COLOR</label><select class="form-select" id="propertyColor">${Object.entries(COLORS).map(([name,color])=>`<option value="${color}" ${p.color===color?'selected':''}>${name}</option>`).join('')}</select></div></div>
+      <label class="form-label" for="propertyNotes">PROPERTY NOTES</label><textarea class="form-textarea" id="propertyNotes" maxlength="5000" placeholder="Roof condition, contact details, work needed, follow-up date...">${escapeHTML(p.notes)}</textarea>
+      <div class="button-row"><button class="primary-btn" data-action="save">${existing?'Save changes':'Save property'}</button>${existing?'<button class="red-btn" data-action="delete">Delete</button>':'<button class="soft-btn" data-action="cancel">Cancel</button>'}</div>`;
+    return;
+  }
+  if(panelMode==='details'){
+    const p=pins.find(x=>x.id===activePinId); if(!p){closePanel();return;}
+    root.innerHTML=`${panelHeader(p.name,p.address || 'Saved property')}
+      <div class="detail-card"><div class="detail-category"><span class="category-dot" style="background:${p.color}"></span>${escapeHTML(p.category)}</div>
+      <div class="detail-notes">${p.notes?escapeHTML(p.notes):'No notes added yet.'}</div>
+      <div class="detail-coords">${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</div></div>
+      <div class="button-row"><button class="primary-btn" data-action="edit">Edit property</button><button class="soft-btn" data-action="directions">Center map</button></div>`;
+    return;
+  }
+  if(panelMode==='places'){
+    root.innerHTML=`${panelHeader('Places',`${pins.length} saved ${pins.length===1?'property':'properties'}`)}
+      <label class="list-search"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="placesFilter" placeholder="Search saved properties"></label>
+      <div class="place-list" id="placeList"></div>`;
+    renderPlaceList('');return;
+  }
+  if(panelMode==='backup'){
+    root.innerHTML=`${panelHeader('Your HomeMap data','Back up your saved pins and notes')}
+      <div class="backup-option"><div class="backup-icon">⇧</div><div class="backup-copy"><strong>Export backup</strong><small>Save all properties to a JSON file</small></div><button data-action="export">Export</button></div>
+      <div class="backup-option"><div class="backup-icon">＋</div><div class="backup-copy"><strong>Import backup</strong><small>Restore properties from a JSON file</small></div><button data-action="import">Import</button></div>
+      <div class="panel-subtitle" style="margin-top:16px">Your pins and notes are stored in this browser on this device. They do not automatically sync to other devices. Export a backup regularly.</div>`;
+  }
+}
+function renderPlaceList(filter){
+  const list=$('placeList');if(!list)return;
+  const q=filter.toLowerCase().trim();
+  const matches=pins.filter(p=>[p.name,p.category,p.address,p.notes].join(' ').toLowerCase().includes(q));
+  if(!matches.length){list.innerHTML=`<div class="empty-state">${pins.length?'No matching properties.':'No saved properties yet. Tap + on the map to add your first house.'}</div>`;return;}
+  list.innerHTML=matches.map(p=>`<button class="place-item" data-pin-id="${escapeHTML(p.id)}"><span class="place-pin" style="background:${p.color}">⌖</span><span class="place-copy"><span class="place-name">${escapeHTML(p.name)}</span><span class="place-meta">${escapeHTML(p.category)}${p.address?' · '+escapeHTML(p.address):''}</span></span><span class="place-arrow">›</span></button>`).join('');
+}
+function startNewPin(latlng,address=''){
+  activePinId=null;draftLatLng={lat:Number(latlng.lat),lng:Number(latlng.lng),address};
+  openPanel('editor');
+}
+function showDetails(id){activePinId=id;openPanel('details');}
+function saveEditor(){
+  if(!draftLatLng)return;
+  const name=$('propertyName').value.trim()||'Saved property';
+  const item={id:activePinId||('p'+Date.now()),lat:draftLatLng.lat,lng:draftLatLng.lng,name,category:$('propertyCategory').value,color:$('propertyColor').value,notes:$('propertyNotes').value.trim(),address:draftLatLng.address || (pins.find(p=>p.id===activePinId)?.address || '')};
+  if(activePinId){const i=pins.findIndex(p=>p.id===activePinId);if(i>=0)pins[i]=item;}else pins.push(item);
+  persist();renderMarkers();closePanel();setTab('mapTab');toast('Property saved');
+}
+function deleteActive(){
+  if(!activePinId)return;
+  const p=pins.find(x=>x.id===activePinId);if(!p)return;
+  if(!confirm(`Delete "${p.name}" and its notes?`))return;
+  pins=pins.filter(x=>x.id!==activePinId);persist();renderMarkers();closePanel();setTab('mapTab');toast('Property deleted');
+}
+function exportBackup(){
+  const blob=new Blob([JSON.stringify({app:'HomeMap',version:4,exportedAt:new Date().toISOString(),pins},null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='homemap-backup.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Backup exported');
+}
+async function importBackup(file){
+  try{
+    const data=JSON.parse(await file.text());if(!Array.isArray(data.pins))throw new Error('Invalid backup');
+    const imported=data.pins.filter(p=>Number.isFinite(Number(p.lat))&&Number.isFinite(Number(p.lng)));
+    if(!confirm(`Import ${imported.length} properties? This replaces the properties currently saved in this browser.`))return;
+    pins=imported.map(p=>({id:String(p.id||('p'+Math.random().toString(36).slice(2))),lat:Number(p.lat),lng:Number(p.lng),name:p.name||'Saved property',category:CATEGORIES.includes(p.category)?p.category:'Prospect',color:p.color||COLORS.Blue,notes:p.notes||'',address:p.address||''}));
+    persist();renderMarkers();renderPanel();toast('Backup imported');
+  }catch(e){alert('That backup file could not be read. Choose a HomeMap JSON backup.');}
+  $('importFile').value='';
+}
+async function geocode(query){
+  const url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&q='+encodeURIComponent(query);
+  const response=await fetch(url,{headers:{'Accept':'application/json'}});if(!response.ok)throw new Error('Search unavailable');return response.json();
+}
+function showSearchResults(items,message){
+  const box=$('searchResults');box.innerHTML='';
+  if(!items.length){box.innerHTML=`<div class="empty-state">${escapeHTML(message||'No results found')}</div>`;box.style.display='block';return;}
+  items.forEach(item=>{
+    const button=document.createElement('button');button.className='search-result';button.innerHTML=`${escapeHTML(item.title)}<small>${escapeHTML(item.subtitle||'')}</small>`;
+    button.addEventListener('click',()=>{box.style.display='none';$('searchInput').value=item.title;map.setView(item.latlng,18);if(item.pinId){showDetails(item.pinId);}else{startNewPin(item.latlng,item.subtitle||item.title);}});
+    box.appendChild(button);
+  });box.style.display='block';
+}
+async function runSearch(query){
+  const local=pins.filter(p=>[p.name,p.category,p.address,p.notes].join(' ').toLowerCase().includes(query.toLowerCase())).slice(0,4).map(p=>({title:p.name,subtitle:p.address||p.category,latlng:{lat:p.lat,lng:p.lng},pinId:p.id}));
+  showSearchResults(local,'Searching addresses…');
+  try{
+    const results=await geocode(query);
+    const remote=results.map(r=>({title:r.name||r.display_name.split(',')[0],subtitle:r.display_name,latlng:{lat:Number(r.lat),lng:Number(r.lon)}}));
+    const combined=[...local,...remote].slice(0,8);
+    showSearchResults(combined,combined.length?'':'No places found');
+  }catch(e){if(!local.length)showSearchResults([],'Address search needs an internet connection.');}
+}
+function setAddMode(){
+  addMode=true;closePanel();$('searchResults').style.display='none';$('mapHint').textContent='Tap the map where you want to place the house pin';toast('Tap the map to place a property pin');
+}
+function switchStyle(){
+  mapStyle=mapStyle==='standard'?'satellite':'standard';
+  if(mapStyle==='satellite'){map.removeLayer(streetLayer);satelliteLayer.addTo(map);$('layerButton').textContent='SAT';$('layerButton').classList.add('active');}
+  else{map.removeLayer(satelliteLayer);streetLayer.addTo(map);$('layerButton').textContent='MAP';$('layerButton').classList.remove('active');}
+}
+const streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'});
+const satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles © Esri'});
+function initMap(){
+  if(!window.L){$('mapHint').textContent='Map library did not load. Check your internet connection and refresh.';return;}
+  map=L.map('map',{zoomControl:false,preferCanvas:true}).setView([33.0362,-97.3881],14);
+  streetLayer.addTo(map);renderMarkers();
+  map.on('click',e=>{if(addMode){addMode=false;$('mapHint').textContent='Tap +, then tap a house to save a pin';startNewPin(e.latlng);}else{$('mapHint').textContent='Tap + to add a property, or select a saved pin';}});
+}
+function locate(){
+  if(!navigator.geolocation){toast('Location is not available in this browser');return;}
+  $('locateButton').classList.add('active');
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const ll=[pos.coords.latitude,pos.coords.longitude];map.setView(ll,17);
+    if(userMarker)map.removeLayer(userMarker);
+    userMarker=L.circleMarker(ll,{radius:7,color:'#fff',weight:3,fillColor:'#087df1',fillOpacity:1}).addTo(map);
+    $('locateButton').classList.remove('active');
+  },()=>{$('locateButton').classList.remove('active');toast('Could not get your location. Check location permissions.');},{enableHighAccuracy:true,timeout:12000});
+}
+$('addButton').addEventListener('click',setAddMode);
+$('layerButton').addEventListener('click',switchStyle);
+$('locateButton').addEventListener('click',locate);
+$('zoomInButton').addEventListener('click',()=>map&&map.zoomIn());
+$('zoomOutButton').addEventListener('click',()=>map&&map.zoomOut());
+$('mapTab').addEventListener('click',()=>{closePanel();setTab('mapTab');});
+$('placesTab').addEventListener('click',()=>{setTab('placesTab');openPanel('places');});
+$('backupTab').addEventListener('click',()=>{setTab('backupTab');openPanel('backup');});
+$('panelBackdrop').addEventListener('click',()=>{closePanel();setTab('mapTab');});
+$('panelContent').addEventListener('click',e=>{
+  const action=e.target.closest('[data-action]')?.dataset.action;
+  if(action==='close'){closePanel();setTab('mapTab');}
+  if(action==='save')saveEditor();
+  if(action==='cancel'){closePanel();setTab('mapTab');}
+  if(action==='delete')deleteActive();
+  if(action==='edit'){const p=pins.find(x=>x.id===activePinId);if(p){draftLatLng={lat:p.lat,lng:p.lng,address:p.address};openPanel('editor');}}
+  if(action==='directions'){const p=pins.find(x=>x.id===activePinId);if(p){map.setView([p.lat,p.lng],18);closePanel();setTab('mapTab');}}
+  if(action==='export')exportBackup();
+  if(action==='import')$('importFile').click();
+  const place=e.target.closest('[data-pin-id]');if(place){const p=pins.find(x=>x.id===place.dataset.pinId);if(p){map.setView([p.lat,p.lng],18);showDetails(p.id);}}
+});
+$('panelContent').addEventListener('input',e=>{if(e.target.id==='placesFilter')renderPlaceList(e.target.value);});
+$('importFile').addEventListener('change',e=>{if(e.target.files?.[0])importBackup(e.target.files[0]);});
+$('searchInput').addEventListener('input',()=>{
+  clearTimeout(searchTimer);const q=$('searchInput').value.trim();
+  if(q.length<2){$('searchResults').style.display='none';return;}
+  searchTimer=setTimeout(()=>runSearch(q),450);
+});
+document.addEventListener('click',e=>{if(!e.target.closest('.top-search')&&!e.target.closest('.search-results'))$('searchResults').style.display='none';});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePanel();$('searchResults').style.display='none';addMode=false;setTab('mapTab');}});
+initMap();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  navigator.serviceWorker.register('./sw.js').then(reg=>reg.update()).catch(()=>{});
+}
 })();
-</script></body></html>
+</script>
+</body>
+</html>
